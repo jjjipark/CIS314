@@ -1,0 +1,80 @@
+1.
+
+int loop(int x, int n) {
+    int result = -1
+for(int mask = 1; mask != 0; mask = mask<<n){ 
+	result ^= (mask&x);
+}
+    return result;
+}
+
+assume x at %ebp + 8, n at %ebp + 12
+
+movl 8(%ebp), %esi			// esi<- x
+movl 12(%ebp), %ebx			// ebx<- n 
+movl $-1, %edi				// edi = -1, edi = result
+movl $1, %edx				// edx = 1, edx= mask
+.L2: 
+movl %edx, %eax				// eax = mask
+andl %esi, %eax				// eax = mask & x
+xorl %eax, %edi				// edi = edi^ (mask&x) = result
+movl %ebx, %ecx				// ecx = n
+shll %ecx, %edx				// edx (mask) = mask << n
+cmpl $0, %edx				// compare mask and 0 
+jne .L2						// if mask != goto L2
+movl %edi, %eax				// eax = result
+
+
+
+
+2.
+
+//A[i] at %esi, j at %ecx , i at %edi, M at %ebx
+// M: 52/4 = 13
+
+//.L3: movl (%ebx), %eax 			// eax<- %ebx
+//movl (%esi,%ecx,4), %edx 			// edx = ecx*4 + esi = A[i][j] 
+//movl %eax, (%esi,%ecx,4) 			// eax: probably t
+//addl $1, %ecx						// ecx++; = j ++
+//movl %edx, (%ebx) 				// A[i][j]
+//addl $52, %ebx 					// ebx += 4*13 => (4*M)
+//cmpl %edi, %ecx 					// compare i : j
+//jl .L3							// if < : goto L3 //////
+
+
+
+
+3.
+
+//_f:                                     ## @f
+//## BB#0:
+		// x at 8(%ebp)
+//	pushl	%ebp				// Save the old base pointer value.
+//	movl	%esp, %ebp			// Set the new base pointer value.
+//	imull	$3, 8(%ebp), %eax	// eax = x*3
+//	popl	%ebp				// finish
+//	retl						// return
+//
+//	.globl	_g
+//	.align	4, 0x90
+//_g:                                     ## @g
+//## BB#0:
+//		// b at 12(%ebp), a at 8(%ebp)
+//	pushl	%ebp				// Save the old base pointer value.	
+//	movl	%esp, %ebp			// Set the new base pointer value.
+//	pushl	%edi				// Save the values of registers that the function
+//	pushl	%esi				// 
+//	subl	$16, %esp			// Make room for one 16-byte local variable(why 16bits?)
+//	movl	12(%ebp), %edi		// edi <-b  //edi used, restore at end
+//	movl	8(%ebp), %eax		// eax <-a  // eax used without first saving
+//	movl	%eax, (%esp)		// a
+//	calll	_f					// f(a)
+//	movl	%eax, %esi			// %esi<- f(a)
+//	movl	%edi, (%esp)		// b
+//	calll	_f					// f(b)
+//	addl	%esi, %eax			// f(a)+ f(b)
+//	addl	$16, %esp
+//	popl	%esi				// 
+//	popl	%edi				//  Recover register values
+//	popl	%ebp
+//	retl

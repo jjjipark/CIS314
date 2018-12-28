@@ -1,0 +1,45 @@
+1.
+see diagram.jpg
+
+2.
+# u in %rbx, v in %rax, length in %rcx, i in %rdx, sum in %xmm1 .L87:  
+movss (%rbx, %rdx, 4), %xmm0    # Get u[i]
+mulss (%rax, %rdx, 4), %xmm0    #Multiply by v[i]
+adds %xmm0, %xmm1               # Add to sum
+addq $1, %rdx                   # Increment i
+cmpq %rcx, %rdx # Compare i to length # If <, keep looping
+jl .L87
+
+a. we can't pipeline 
+mulss (%rax, %rdx, 4), %xmm0    #Multiply by v[i]
+adds %xmm0, %xmm1
+because they depend on values from the previous values.
+b. Latency: meaning the total time required to perform the operation 
+Floating-point adder contains three cycles (and hence the three-cycle latency).
+Floating-point "mul" latency is 4 for single and 5 cycle for double.
+c. What is the lower latency bound (in terms of CPE) of the procedure?
+on inner function, CPE is 8 as the float addition requires 3 and multiplication requires 5 CPE.
+3+5/3 = 3.33
+    
+
+4.
+                | inner     | inner 2
+--------------------------------------------
+ vec_length=128 | 0.007676  |  0.003416
+---------------------------------------------
+ vec_length=8   |0.001733   |  0.001392
+---------------------------------------------
+==>inner2 function is slightly faster than inner functoin.
+
+
+
+
+
+
+
+
+
+
+
+
+

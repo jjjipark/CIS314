@@ -1,0 +1,4 @@
+Without forwarding, we need 3 stalls because we
+need to hold on addl until they are done to be used on next step. so has to be waiting 3 stalls for %edx.
+
+With forwarding, 1 stall needed because it needs to finish reading from memory and then forward the data to the addl.

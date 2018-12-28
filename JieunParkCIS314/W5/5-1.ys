@@ -1,0 +1,53 @@
+  0x0000:              | .pos 0
+  0x0000:              | init:
+  0x0000: 30f400010000 | 	irmovl Stack, %esp
+  0x0006: 30f500010000 | 	irmovl Stack, %ebp
+  0x000c: 800c010000   | 	call Main
+  0x0011: 00           | 	halt
+                       | 	
+  0x0012:              | .pos 0x104
+  0x0104:              | x:
+  0x0104: 01000000     | 	.long 0x1
+                       | 
+  0x0108:              | .pos 0x108
+  0x0108:              | y:
+  0x0108: 02000000     | 	.long 0x2
+                       | 
+                       | 	
+  0x010c:              | .pos 0x104
+  0x0104:              | array:
+  0x0104: 01000000     | 	.long 0x1
+  0x0108: 02000000     | 	.long 0x2
+                       | 
+  0x010c:              | Main:  
+  0x010c: a05f         |     pushl %ebp
+  0x010e: 2045         |     rrmovl %esp,%ebp
+  0x0110: 30f008010000 |     irmovl y ,%eax    ### has to be y first?
+  0x0116: a00f         |     pushl %eax               # Push y
+  0x0118: 30f704010000 |     irmovl x ,%edi	
+  0x011e: a07f         |     pushl %edi               # Push x   
+  0x0120: 802a010000   |     call swap                # swap(x, y)
+  0x0125: 2054         |     rrmovl %ebp,%esp
+  0x0127: b05f         |     popl %ebp
+  0x0129: 90           |     ret
+                       | 
+  0x012a:              | swap:
+  0x012a: a05f         | 	pushl	%ebp
+  0x012c: 2045         | 	rrmovl	%esp, %ebp
+  0x012e: a06f         | 	pushl	%esi
+  0x0130: 502508000000 | 	mrmovl  8(%ebp), %edx
+  0x0136: 50150c000000 | 	mrmovl  12(%ebp), %ecx
+  0x013c: 503200000000 | 	mrmovl  (%edx), %ebx
+  0x0142: 500100000000 | 	mrmovl  (%ecx), %eax
+  0x0148: 400200000000 | 	rmmovl  %eax, (%edx)
+  0x014e: 403100000000 | 	rmmovl  %ebx, (%ecx)
+                       | 
+  0x0154:              | end:
+  0x0154: 2054         | 	rrmovl %ebp,%esp
+  0x0156: b05f         | 	popl %ebp
+  0x0158: 90           | 	ret
+                       | 
+  0x0159:              | .pos 0x100
+  0x0100:              | Stack:
+                       | 
+                       | 

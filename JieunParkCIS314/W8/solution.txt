@@ -1,0 +1,11 @@
+A. What is the total number of memory writes? It may help to think in terms of movl instructions.
+-> Writes 4 times and i and j runs 16 times for each.
+So the total number of writes is 16*16*4=1024
+
+B. What is the total number of memory writes that miss in the cache? 
+-> 128
+   Since 32 bytes blocks, there will be 2 miss when i =0 and j is from 0 to 16. So after sum up all i iteration for 4 writes, 16*2*4 = 128
+
+C. What is the miss rate?
+-> 128/1024 = 12.5%
+

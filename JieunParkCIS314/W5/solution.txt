@@ -1,0 +1,32 @@
+zProblem2:
+See circuit.png.
+ (A && !B) || (!C && D))
+B and C have NOT gate, A and !B have AND gate, !C and D have AND gate,
+AB and CD have OR gate
+
+Problem3:
+Fetch:
+Read instruction from instruction memory
+icode:ifun ← M1[PC]			//feches instruction
+rA:rB ← M1[PC+1]			// feches rB ID
+valC ← M4[PC+2]	 			// feches constant 
+valP ← PC+6					// next PC value
+
+Decode:
+Read program registers
+valB <-- R[rB] 				//read register rB
+
+Execute:
+Compute value or address
+ValE <-- valB + ValC        //add constant and register rB
+setCC						//set condition
+
+Memory:
+Read or write data       	//nothing
+
+Write back:
+Write program registers
+R[rB] <- value 				//write back to rB
+
+PC update:
+PC <-- valP 			
